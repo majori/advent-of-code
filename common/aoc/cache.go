@@ -28,8 +28,6 @@ func readCache() map[string]string {
 
 	dec := json.NewDecoder(file)
 
-	file.Stat()
-
 	var c map[string]string
 
 	err := dec.Decode(&c)
