@@ -3,7 +3,9 @@ package aoc
 import (
 	"fmt"
 	"io/ioutil"
+	"log"
 	"net/http"
+	"net/url"
 	"os"
 	"strconv"
 	"strings"
@@ -51,24 +53,32 @@ func getInput(year, day int) string {
 	return input
 }
 
-func GetInput(year, day int) string {
-	return getInput(year, day)
-}
-
-func GetInputRows(year, day int) []string {
-	input := strings.TrimSpace(GetInput(year, day))
-	return strings.Split(input, "\n")
-}
-
-func GetInputRowsAsInt(year, day int) []int {
-	rows := GetInputRows(year, day)
-	intRows := make([]int, len(rows))
-	for i, s := range rows {
-		x, err := strconv.Atoi(s)
-		if err != nil {
-			panic(err)
-		}
-		intRows[i] = x
+func submit(year, day, level int, answer interface{}) {
+	token := os.Getenv("AOC_SESSION")
+	if token == "" {
+		panic("Environment variable \"AOC_SESSION\" is missing")
 	}
-	return intRows
+
+	data := url.Values{}
+	data.Set("level", fmt.Sprint(level))
+	data.Set("answer", fmt.Sprint(answer))
+
+	req, _ := http.NewRequest("POST", fmt.Sprintf("https://adventofcode.com/%d/day/%d/answer", year, day), strings.NewReader(data.Encode()))
+	req.Header.Add("Content-Type", "application/x-www-form-urlencoded")
+  req.Header.Add("Content-Length", strconv.Itoa(len(data.Encode())))
+
+	req.AddCookie(&http.Cookie{Name: "session", Value: token})
+
+	client := &http.Client{}
+	res, err := client.Do(req)
+	if err != nil {
+			log.Fatal(err)
+	}
+	log.Println(res.Status)
+	defer res.Body.Close()
+	body, err := ioutil.ReadAll(res.Body)
+	if err != nil {
+			log.Fatal(err)
+	}
+	log.Println(string(body))
 }

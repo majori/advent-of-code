@@ -29,7 +29,9 @@ func main() {
 			valid1++
 		}
 
-		if (rune(password[lower-1]) == char && rune(password[upper-1]) != char) || (rune(password[lower-1]) != char && rune(password[upper-1]) == char) {
+		v1 := rune(password[lower-1])
+		v2 := rune(password[upper-1])
+		if (v1 == char && v2 != char) || (v1 != char && v2 == char) {
 			valid2++
 		}
 	}
