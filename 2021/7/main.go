@@ -2,13 +2,12 @@ package main
 
 import (
 	"advent-of-code/common/aoc"
-	"fmt"
 	"strconv"
 	"strings"
 )
 
 func main() {
-	task := aoc.Init(2021, 6)
+	task := aoc.Init(2021, 7)
 	input := strings.Split(task.AsString(), ",")
 
 	crabs := make([]int, len(input))
@@ -18,5 +17,5 @@ func main() {
 		crabs[i] = x
 	}
 
-	fmt.Println(crabs)
+	task.Submit1("asd")
 }
